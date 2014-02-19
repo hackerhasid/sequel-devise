@@ -17,11 +17,19 @@ module Sequel
       module ClassMethods
         Model::HOOKS.each do |hook|
           define_method(hook) do |method = nil, options = {}, &block|
+            
+            unless block
+              (raise Error, 'No hook method specified') unless method
+              block = proc { send method }
+            end
+
             if Symbol === (if_method = options[:if])
               orig_block = block
               block = proc { instance_eval &orig_block if send(if_method) }
             end
-            super method, &block
+
+            super nil, &block
+
           end
         end
       end
