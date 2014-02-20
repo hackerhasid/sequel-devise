@@ -12,6 +12,10 @@ module Sequel
         def changed? # For rememberable
           !changed_columns.empty?
         end
+
+        def email_changed? # For validatable
+          changed_columns(:email)
+        end
       end
 
       module ClassMethods
